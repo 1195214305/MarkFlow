@@ -1,0 +1,111 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    @apply border-dark-border;
+  }
+
+  body {
+    @apply bg-dark-bg text-dark-text antialiased;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+  }
+
+  ::-webkit-scrollbar {
+    @apply w-2 h-2;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-dark-bg;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-dark-border rounded-full hover:bg-dark-muted;
+  }
+}
+
+@layer components {
+  .glass-effect {
+    @apply bg-dark-card/50 backdrop-blur-xl border border-dark-border;
+  }
+
+  .glow-effect {
+    box-shadow: 0 0 20px rgba(255, 107, 53, 0.3);
+  }
+
+  .editor-area {
+    @apply font-mono text-sm leading-relaxed;
+  }
+
+  .preview-area {
+    @apply prose prose-invert max-w-none;
+  }
+
+  .preview-area h1 {
+    @apply text-3xl font-bold mb-4 text-primary;
+  }
+
+  .preview-area h2 {
+    @apply text-2xl font-bold mb-3 text-secondary;
+  }
+
+  .preview-area h3 {
+    @apply text-xl font-semibold mb-2;
+  }
+
+  .preview-area p {
+    @apply mb-4 leading-relaxed;
+  }
+
+  .preview-area code {
+    @apply bg-dark-card px-2 py-1 rounded text-secondary font-mono text-sm;
+  }
+
+  .preview-area pre {
+    @apply bg-dark-card p-4 rounded-lg overflow-x-auto mb-4;
+  }
+
+  .preview-area pre code {
+    @apply bg-transparent p-0;
+  }
+
+  .preview-area a {
+    @apply text-primary hover:text-secondary transition-colors;
+  }
+
+  .preview-area ul, .preview-area ol {
+    @apply mb-4 pl-6;
+  }
+
+  .preview-area li {
+    @apply mb-2;
+  }
+
+  .preview-area blockquote {
+    @apply border-l-4 border-primary pl-4 italic text-dark-muted;
+  }
+
+  /* 移动端适配 */
+  @media (max-width: 768px) {
+    .editor-area {
+      @apply text-xs;
+    }
+
+    .preview-area {
+      @apply text-sm;
+    }
+
+    .preview-area h1 {
+      @apply text-2xl;
+    }
+
+    .preview-area h2 {
+      @apply text-xl;
+    }
+
+    .preview-area h3 {
+      @apply text-lg;
+    }
+  }
+}

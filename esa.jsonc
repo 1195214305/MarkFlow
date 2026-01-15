@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "assets": {
+    "directory": "frontend/dist"
+  },
+  "functions": {
+    "directory": "functions"
+  },
+  "routes": [
+    {
+      "pattern": "/api/ai/optimize",
+      "function": "ai/optimize"
+    },
+    {
+      "pattern": "/api/ai/continue",
+      "function": "ai/continue"
+    },
+    {
+      "pattern": "/api/storage/save",
+      "function": "storage/save"
+    },
+    {
+      "pattern": "/api/storage/load",
+      "function": "storage/load"
+    }
+  ]
+}
