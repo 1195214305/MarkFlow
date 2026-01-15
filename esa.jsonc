@@ -16,12 +16,28 @@
       "function": "ai/continue"
     },
     {
+      "pattern": "/api/ai/seo",
+      "function": "ai/seo"
+    },
+    {
       "pattern": "/api/storage/save",
       "function": "storage/save"
     },
     {
       "pattern": "/api/storage/load",
       "function": "storage/load"
+    },
+    {
+      "pattern": "/api/storage/history",
+      "function": "storage/history"
+    },
+    {
+      "pattern": "/api/collab/join",
+      "function": "collab/join"
+    },
+    {
+      "pattern": "/api/collab/sync",
+      "function": "collab/sync"
     }
   ]
 }

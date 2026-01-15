@@ -1,12 +1,16 @@
-import { Sparkles, Wand2, Save, Download, Eye, Edit3 } from 'lucide-react'
+import { Sparkles, Wand2, Save, Download, Eye, Edit3, Layout, History, Users } from 'lucide-react'
+import { useState } from 'react'
 import { useEditorStore } from '../store/editorStore'
 
 interface ToolbarProps {
   showPreview: boolean
   setShowPreview: (show: boolean) => void
+  onOpenTemplates: () => void
+  onOpenHistory: () => void
+  onOpenCollaboration: () => void
 }
 
-export default function Toolbar({ showPreview, setShowPreview }: ToolbarProps) {
+export default function Toolbar({ showPreview, setShowPreview, onOpenTemplates, onOpenHistory, onOpenCollaboration }: ToolbarProps) {
   const { isLoading, aiOptimize, aiContinue, saveToEdge, content } = useEditorStore()
 
   const handleDownload = () => {
@@ -22,6 +26,14 @@ export default function Toolbar({ showPreview, setShowPreview }: ToolbarProps) {
   return (
     <div className="h-12 border-b border-dark-border flex items-center justify-between px-4 md:px-6 glass-effect">
       <div className="flex items-center gap-1 md:gap-2">
+        <button
+          onClick={onOpenTemplates}
+          className="flex items-center gap-1 md:gap-2 px-2 md:px-4 py-1.5 hover:bg-dark-card rounded-lg transition-colors text-xs md:text-sm"
+        >
+          <Layout size={14} className="md:w-4 md:h-4" />
+          <span className="hidden md:inline">模板</span>
+        </button>
+
         <button
           onClick={aiContinue}
           disabled={isLoading}
@@ -53,6 +65,22 @@ export default function Toolbar({ showPreview, setShowPreview }: ToolbarProps) {
       </div>
 
       <div className="flex items-center gap-1 md:gap-2">
+        <button
+          onClick={onOpenHistory}
+          className="flex items-center gap-1 md:gap-2 px-2 md:px-4 py-1.5 hover:bg-dark-card rounded-lg transition-colors text-xs md:text-sm"
+        >
+          <History size={14} className="md:w-4 md:h-4" />
+          <span className="hidden md:inline">历史</span>
+        </button>
+
+        <button
+          onClick={onOpenCollaboration}
+          className="flex items-center gap-1 md:gap-2 px-2 md:px-4 py-1.5 hover:bg-dark-card rounded-lg transition-colors text-xs md:text-sm"
+        >
+          <Users size={14} className="md:w-4 md:h-4" />
+          <span className="hidden md:inline">协作</span>
+        </button>
+
         <button
           onClick={saveToEdge}
           className="flex items-center gap-1 md:gap-2 px-2 md:px-4 py-1.5 hover:bg-dark-card rounded-lg transition-colors text-xs md:text-sm"
