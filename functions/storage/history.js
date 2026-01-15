@@ -1,8 +1,4 @@
-interface Env {
-  KV_STORAGE: KVNamespace
-}
-
-export async function onRequest(context: { request: Request; env: Env }): Promise<Response> {
+export async function onRequest(context) {
   const { request, env } = context
 
   const corsHeaders = {

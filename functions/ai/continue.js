@@ -1,8 +1,4 @@
-interface Env {
-  KV_STORAGE: KVNamespace
-}
-
-export async function onRequest(context: { request: Request; env: Env }): Promise<Response> {
+export async function onRequest(context) {
   const { request, env } = context
 
   const corsHeaders = {
@@ -16,7 +12,7 @@ export async function onRequest(context: { request: Request; env: Env }): Promis
   }
 
   try {
-    const { content, apiKey } = await request.json() as { content: string; apiKey: string }
+    const { content, apiKey } = await request.json()
 
     if (!apiKey) {
       return new Response(JSON.stringify({ error: '缺少API Key' }), {
@@ -36,14 +32,14 @@ export async function onRequest(context: { request: Request; env: Env }): Promis
         messages: [
           {
             role: 'system',
-            content: '你是一个SEO专家。根据用户提供的Markdown文档内容，生成优化的SEO meta标签。返回JSON格式：{"title": "标题", "description": "描述", "keywords": "关键词1,关键词2,关键词3"}'
+            content: '你是一个专业的内容创作助手。根据用户已有的Markdown文档内容，自然地续写下一段内容，保持风格和主题一致。只返回续写的内容，不要添加任何解释。'
           },
           {
             role: 'user',
-            content: `请为以下内容生成SEO meta标签：\n\n${content.substring(0, 1000)}`
+            content: `请根据以下内容续写：\n\n${content}`
           }
         ],
-        max_tokens: 500
+        max_tokens: 1000
       })
     })
 
@@ -51,26 +47,15 @@ export async function onRequest(context: { request: Request; env: Env }): Promis
       throw new Error('千问API调用失败')
     }
 
-    const data = await response.json() as any
-    const seoText = data.choices[0].message.content
+    const data = await response.json()
+    const continuation = data.choices[0].message.content
 
-    let seo
-    try {
-      seo = JSON.parse(seoText)
-    } catch {
-      seo = {
-        title: '未命名文档',
-        description: '使用MarkFlow创建的Markdown文档',
-        keywords: 'markdown,文档,编辑器'
-      }
-    }
-
-    return new Response(JSON.stringify({ seo }), {
+    return new Response(JSON.stringify({ continuation }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' }
     })
 
   } catch (error) {
-    return new Response(JSON.stringify({ error: 'SEO生成失败' }), {
+    return new Response(JSON.stringify({ error: '续写失败' }), {
       status: 500,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' }
     })

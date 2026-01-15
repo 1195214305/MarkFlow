@@ -1,8 +1,4 @@
-interface Env {
-  KV_STORAGE: KVNamespace
-}
-
-export async function onRequest(context: { request: Request; env: Env }): Promise<Response> {
+export async function onRequest(context) {
   const { request, env } = context
 
   const corsHeaders = {
@@ -16,7 +12,7 @@ export async function onRequest(context: { request: Request; env: Env }): Promis
   }
 
   try {
-    const { content, timestamp } = await request.json() as { content: string; timestamp: number }
+    const { content, timestamp } = await request.json()
 
     const userId = 'default-user'
     const key = `draft:${userId}`

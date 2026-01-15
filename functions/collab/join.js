@@ -1,8 +1,4 @@
-interface Env {
-  KV_STORAGE: KVNamespace
-}
-
-export async function onRequest(context: { request: Request; env: Env }): Promise<Response> {
+export async function onRequest(context) {
   const { request, env } = context
 
   const corsHeaders = {
@@ -16,8 +12,7 @@ export async function onRequest(context: { request: Request; env: Env }): Promis
   }
 
   try {
-    const url = new URL(request.url)
-    const roomId = url.searchParams.get('roomId')
+    const { roomId } = await request.json()
 
     if (!roomId) {
       return new Response(JSON.stringify({ error: '缺少房间ID' }), {
@@ -26,18 +21,23 @@ export async function onRequest(context: { request: Request; env: Env }): Promis
       })
     }
 
-    const contentKey = `collab:${roomId}:content`
-    const usersKey = `collab:${roomId}:users`
+    const userId = `user-${Math.random().toString(36).substring(2, 8)}`
+    const roomKey = `collab:${roomId}:users`
 
-    const content = await env.KV_STORAGE.get(contentKey)
-    const collaborators = await env.KV_STORAGE.get(usersKey, 'json') as string[] || []
+    const existingUsers = await env.KV_STORAGE.get(roomKey, 'json') || []
+    if (!existingUsers.includes(userId)) {
+      existingUsers.push(userId)
+      await env.KV_STORAGE.put(roomKey, JSON.stringify(existingUsers), {
+        expirationTtl: 3600
+      })
+    }
 
-    return new Response(JSON.stringify({ content, collaborators }), {
+    return new Response(JSON.stringify({ success: true, userId }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' }
     })
 
   } catch (error) {
-    return new Response(JSON.stringify({ error: '同步失败' }), {
+    return new Response(JSON.stringify({ error: '加入失败' }), {
       status: 500,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' }
     })

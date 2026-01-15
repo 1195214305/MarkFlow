@@ -1,8 +1,14 @@
-interface Env {
-  KV_STORAGE: KVNamespace
+function hashString(str) {
+  let hash = 0
+  for (let i = 0; i < str.length; i++) {
+    const char = str.charCodeAt(i)
+    hash = ((hash << 5) - hash) + char
+    hash = hash & hash
+  }
+  return Math.abs(hash).toString(36)
 }
 
-export async function onRequest(context: { request: Request; env: Env }): Promise<Response> {
+export async function onRequest(context) {
   const { request, env } = context
 
   const corsHeaders = {
@@ -16,7 +22,7 @@ export async function onRequest(context: { request: Request; env: Env }): Promis
   }
 
   try {
-    const { content, apiKey } = await request.json() as { content: string; apiKey: string }
+    const { content, apiKey } = await request.json()
 
     if (!apiKey) {
       return new Response(JSON.stringify({ error: '缺少API Key' }), {
@@ -62,7 +68,7 @@ export async function onRequest(context: { request: Request; env: Env }): Promis
       throw new Error('千问API调用失败')
     }
 
-    const data = await response.json() as any
+    const data = await response.json()
     const optimized = data.choices[0].message.content
 
     const result = JSON.stringify({ optimized })
@@ -82,16 +88,6 @@ export async function onRequest(context: { request: Request; env: Env }): Promis
       headers: { ...corsHeaders, 'Content-Type': 'application/json' }
     })
   }
-}
-
-function hashString(str: string): string {
-  let hash = 0
-  for (let i = 0; i < str.length; i++) {
-    const char = str.charCodeAt(i)
-    hash = ((hash << 5) - hash) + char
-    hash = hash & hash
-  }
-  return Math.abs(hash).toString(36)
 }
 
 export default { onRequest }
